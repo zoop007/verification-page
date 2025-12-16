@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#0f172a;
+  --accent:#2563eb;
+  --bg:#f8fafc;
+}
+body{
+  margin:0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--bg);
+}
+.card{
+  max-width:520px;
+  margin:60px auto;
+  background:#fff;
+  padding:32px;
+  border-radius:16px;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);
+}
+h1{
+  text-align:center;
+  font-size:24px;
+  color:var(--primary);
+  margin-bottom:6px;
+}
+.sub{
+  text-align:center;
+  font-size:14px;
+  color:#64748b;
+  margin-bottom:20px;
+}
+.notice{
+  background:#f1f5f9;
+  padding:16px;
+  border-radius:10px;
+  font-size:13px;
+  color:#334155;
+}
+.notice strong{color:#0f172a}
+.consent{
+  margin:22px 0;
+  font-size:14px;
+  color:#1e293b;
+}
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:600;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+}
+button:disabled{
+  background:#94a3b8;
+  cursor:not-allowed;
+}
+.camera{
+  display:none;
+  margin-top:24px;
+  text-align:center;
+}
+video,canvas{
+  width:100%;
+  border-radius:12px;
+  margin-top:12px;
+}
+.footer{
+  margin-top:22px;
+  text-align:center;
+  font-size:12px;
+  color:#64748b;
+}
+.badge{
+  margin-top:10px;
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#e0e7ff;
+  color:#1e40af;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h1>Secure Verification</h1>
+<div class="sub">Consent-Based | Privacy-First | Legal-Compliant</div>
+
+<div class="notice">
+<strong>Legal & Privacy Notice</strong><br><br>
+• This verification is conducted only for educational, awareness, or security validation purposes.<br>
+• No personal data is accessed without your explicit permission.<br>
+• Basic technical details may be processed strictly after consent and in compliance with the IT Act, 2000.<br>
+• You may leave this page if you do not agree.
+</div>
+
+<div class="consent">
+<label>
+<input type="checkbox" id="agree">
+ I freely give my consent and confirm that I have read and understood the Privacy & Legal Notice.
+</label>
+</div>
+
+<button id="continue" disabled onclick="startVerification()">
+Continue Securely
+</button>
+
+<div class="camera" id="cameraBox">
+<p style="font-size:14px;color:#334155">
+<strong>Optional Identity Confirmation</strong><br>
+Camera access is voluntary and used only with your approval.
+</p>
+
+<video id="video" autoplay></video>
+<button style="margin-top:12px" onclick="capture()">Capture Photo</button>
+<canvas id="canvas" style="display:none"></canvas>
+</div>
+
+<div class="footer">
+Consent recorded at: <span id="time"></span><br>
+<span class="badge">Privacy & Digital Ethics Protected</span>
+</div>
+</div>
+
+<script>
+const agree=document.getElementById("agree");
+const btn=document.getElementById("continue");
+const time=document.getElementById("time");
+time.innerText=new Date().toLocaleString();
+
+agree.addEventListener("change",()=>{
+  btn.disabled=!agree.checked;
+});
+
+function startVerification(){
+  document.getElementById("cameraBox").style.display="block";
+  navigator.mediaDevices.getUserMedia({video:true})
+  .then(stream=>{
+    document.getElementById("video").srcObject=stream;
+  })
+  .catch(()=>{
+    alert("Camera permission not granted. You may proceed without photo.");
+  });
+}
+
+function capture(){
+  const video=document.getElementById("video");
+  const canvas=document.getElementById("canvas");
+  canvas.style.display="block";
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+  canvas.getContext("2d").drawImage(video,0,0);
+  alert("Photo captured with consent.");
+}
+</script>
+
+</body>
+</html>
